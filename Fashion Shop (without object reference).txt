@@ -1,0 +1,1361 @@
+import java.util.*;
+
+public class Finalcoursework {
+
+    static Scanner sc = new Scanner(System.in);
+
+    static String[] orderId = {"ODR#00001", "ODR#00002", "ODR#00003", "ODR#00004", "ODR#00005", "ODR#00006"};
+    static String[] contactId = {"0703892337", "0703892337", "0703897107", "0703892337", "0703897107", "0703897108"};
+    static String[] tshirtSize = {"M", "S", "M", "M", "L", "XL"};
+    static int[] quantity = {1, 2, 5, 6, 7, 3};
+    static int[] status = {0, 0, 0, 0, 2, 1};
+    static float[] amt = {1000, 2000, 5000, 6000, 7000, 3000};
+    static float[] prices = {600, 800, 900, 1000, 1100, 1200};
+
+    static final String st[] = {"processing", "delivering", "delivered"};
+
+    public static void extendArrays() {
+        String[] tempOrderId = new String[orderId.length + 1];
+        String[] tempTshirtSize = new String[orderId.length + 1];
+        String[] tempContactId = new String[orderId.length + 1];
+        int[] tempQuantity = new int[orderId.length + 1];
+        int[] tempStatus = new int[orderId.length + 1];
+        float[] tempAmt = new float[orderId.length + 1];
+
+        for (int i = 0; i < orderId.length; i++) {
+
+            tempOrderId[i] = orderId[i];
+            tempContactId[i] = contactId[i];
+            tempTshirtSize[i] = tshirtSize[i];
+            tempQuantity[i] = quantity[i];
+            tempStatus[i] = status[i];
+            tempAmt[i] = amt[i];
+
+        }
+
+        orderId = tempOrderId;
+        contactId = tempContactId;
+        tshirtSize = tempTshirtSize;
+        quantity = tempQuantity;
+        status = tempStatus;
+        amt = tempAmt;
+
+    }
+
+    public final static void clearConsole() {
+        try {
+            final String os = System.getProperty("os.name");
+            if (os.contains("Windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+// Handle any exceptions.
+        }
+    }
+
+    public static String generateOrderId() {
+
+        if (orderId.length > 0) {
+
+            String id = orderId[orderId.length - 1];
+            String str = id.substring(4);
+
+            int num = Integer.parseInt(str);
+            num++;
+            return String.format("ODR#%05d", num);
+
+        }
+
+        return "ODR#00001";
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static void placeOrder() {
+
+        L0:
+        while (true) {
+            clearConsole();
+            System.out.println("");
+            System.out.println("""
+                           \t  _____  _                   ____          _           
+                           \t |  __ \\| |                 / __ \\        | |          
+                           \t | |__) | | __ _  ___ ___  | |  | |_ __ __| | ___ _ __ 
+                           \t |  ___/| |/ _` |/ __/ _ \\ | |  | | '__/ _` |/ _ \\ '__|
+                           \t | |    | | (_| | (_|  __/ | |__| | | | (_| |  __/ |   
+                           \t |_|    |_|\\__,_|\\___\\___|  \\____/|_|  \\__,_|\\___|_|   """);
+
+            System.out.println(
+                    "\t_____________________________________________________");
+
+            System.out.println("");
+
+            String ordId = generateOrderId();
+
+            System.out.println("\tOrder ID : " + ordId);
+            System.out.println("");
+
+            String phone;
+            L1:
+            while (true) {
+                System.out.println("");
+                System.out.print("\tEnter Customer Phone number  : ");
+                phone = sc.next();
+                if (phone.length() != 10 || phone.charAt(0) != '0') {
+
+                    System.out.println("");
+                    System.out.println("\tInvalid Phone Number... try again");
+                    System.out.println("");
+                    System.out.print("DO you want to enter your phone number again? (y/n) : ");
+
+                    char op = sc.next().charAt(0);
+                    if (op == 'y' || op == 'Y') {
+
+                        continue L1;
+
+                    } else {
+
+                        home();
+                    }
+
+                }
+                break;
+            }
+            String size;
+
+            while (true) {
+                System.out.println("");
+                System.out.print("\tEnter T-Shirt size(XS/S/M/L/XL/XXL) : ");
+
+                size = sc.next();
+
+                if (size.equals("XS") || size.equals("S") || size.equals("M") || size.equals("L") || size.equals("XL") || size.equals("XXL")) {
+
+                    break;
+
+                } else {
+                    continue;
+                }
+            }
+            int qty = 0;
+            float amount = 0;
+            while (true) {
+                System.out.println("");
+
+                System.out.print("\tEnter quantity : ");
+
+                qty = sc.nextInt();
+
+                if (qty == 0) {
+                    continue;
+                } else {
+
+                    switch (size) {
+
+                        case "XS":
+                            amount = prices[0] * qty;
+                            break;
+                        case "S":
+                            amount = prices[1] * qty;
+                            break;
+                        case "M":
+                            amount = prices[2] * qty;
+                            break;
+                        case "L":
+                            amount = prices[3] * qty;
+                            break;
+                        case "XL":
+                            amount = prices[4] * qty;
+                            break;
+
+                        case "XXL":
+                            amount = prices[5] * qty;
+
+                    }
+
+                    System.out.println("");
+                    System.out.println("\tAmount : " + amount);
+                    System.out.println("");
+                }
+
+                System.out.print("\tDo you want to place this order?(y/n) : ");
+
+                char op = sc.next().charAt(0);
+                if (op == 'y' || op == 'Y') {
+
+                    extendArrays();
+
+                    orderId[orderId.length - 1] = ordId;
+                    contactId[contactId.length - 1] = phone;
+                    tshirtSize[orderId.length - 1] = size;
+                    quantity[orderId.length - 1] = qty;
+                    amt[orderId.length - 1] = amount;
+                    status[orderId.length - 1] = 0;
+                    System.out.println("");
+
+                    System.out.println("\t\tOrder Placed!..");
+                    System.out.println("");
+
+                    System.out.print("Do you want to place another order?(y/n) : ");
+                    op = sc.next().charAt(0);
+
+                    if (op == 'y' || op == 'Y') {
+
+                        continue L0;
+                    } else if (op == 'n' || op == 'N') {
+
+                        home();
+                    }
+
+                }
+                System.out.println("");
+                System.out.print("Do you want to place another order?(y/n) : ");
+                op = sc.next().charAt(0);
+
+                if (op == 'y' || op == 'Y') {
+
+                    continue L0;
+
+                } else if (op == 'n' || op == 'N') {
+
+                    home();
+                }
+
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void searchCustomer() {
+
+        while (true) {
+            clearConsole();
+            System.out.println("");
+            System.out.println("""
+                               \t   _____                     _        _____          _                            
+                               \t  / ____|                   | |      / ____|        | |                           
+                               \t | (___   ___  __ _ _ __ ___| |__   | |    _   _ ___| |_ ___  _ __ ___   ___ _ __ 
+                               \t  \\___ \\ / _ \\/ _` | '__/ __| '_ \\  | |   | | | / __| __/ _ \\| '_ ` _ \\ / _ \\ '__|
+                               \t  ____) |  __/ (_| | | | (__| | | | | |___| |_| \\__ \\ || (_) | | | | | |  __/ |   
+                               \t |_____/ \\___|\\__,_|_|  \\___|_| |_|  \\_____\\__,_|___/\\__\\___/|_| |_| |_|\\___|_|  """);
+
+            System.out.println("\t________________________________________________________________________________");
+            System.out.println("");
+
+            System.out.print("\tEnter Phone Number : ");
+            String phoneNum = sc.next();
+
+            if (search(contactId, phoneNum) == -1) {
+                System.out.println("");
+                System.out.println("\tInvalid Input...");
+                System.out.println("");
+                System.out.print("Do you want to search another customer report?(y/n) : ");
+                char op = sc.next().charAt(0);
+
+                if (op == 'y' || op == 'Y') {
+
+                    continue;
+
+                } else {
+
+                    home();
+                }
+            }
+
+            float[] amt2 = new float[6];
+
+            int[] qty2 = new int[6];
+
+            String[] size = {"XS", "S", "M", "L", "XL", "XXL"};
+
+            for (int i = 0; i < contactId.length; i++) {
+
+                if (contactId[i].equals(phoneNum)) {
+
+                    switch (tshirtSize[i]) {
+
+                        case "XS":
+                            amt2[0] += amt[i];
+                            qty2[0] += quantity[i];
+                            break;
+                        case "S":
+                            amt2[1] += amt[i];
+                            qty2[1] += quantity[i];
+                            break;
+                        case "M":
+                            amt2[2] += amt[i];
+                            qty2[2] += quantity[i];
+                            break;
+                        case "L":
+                            amt2[3] += amt[i];
+                            qty2[3] += quantity[i];
+                            break;
+                        case "XL":
+                            amt2[4] += amt[i];
+                            qty2[4] += quantity[i];
+                            break;
+                        case "XXL":
+                            amt2[5] += amt[i];
+                            qty2[5] += quantity[i];
+                    }
+                }
+            }
+
+            for (int i = 0; i < amt2.length - 1; i++) {
+                for (int j = i + 1; j < amt2.length; j++) {
+
+                    if (amt2[i] < amt2[j]) {
+                        float temp = amt2[i];
+                        amt2[i] = amt2[j];
+                        amt2[j] = temp;
+
+                        //----------------------------
+                        int qtemp = qty2[i];
+                        qty2[i] = qty2[j];
+                        qty2[j] = qtemp;
+
+                        //----------------------------
+                        String stemp = size[i];
+                        size[i] = size[j];
+                        size[j] = stemp;
+
+                    }
+
+                }
+            }
+
+            float tot = 0;
+            System.out.println("");
+
+            System.out.println("\t\t+---------------+---------------+---------------+");
+            System.out.printf("\t\t|%-15s|%-15s|%-15s|%n", "    Size", "     QTY", " Total Amount");
+            System.out.println("\t\t+---------------+---------------+---------------+");
+
+            for (int i = 0; i < 6; i++) {
+
+                System.out.printf("\t\t|%-15s|%-15d|%15.2f|%n", size[i], qty2[i], amt2[i]);
+                tot += amt2[i];
+
+            }
+            System.out.println("\t\t+---------------+---------------+---------------+");
+            System.out.printf("\t\t|%-15s|%-15s|%-15.2f|%n", "Total Amount:", "", tot);
+            System.out.println("\t\t+---------------+---------------+---------------+");
+            System.out.println("");
+            System.out.print("\tDo you want to search another number(y/n) : ");
+            char op = sc.next().charAt(0);
+            if (op == 'y' || op == 'Y') {
+
+                continue;
+
+            } else {
+
+                home();
+            }
+
+        }
+
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static int search(String[] ar, String ob) {
+
+        for (int i = 0; i < ar.length; i++) {
+
+            if (ar[i].equals(ob)) {
+
+                return i;
+
+            }
+
+        }
+
+        return -1;
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static void searchOrderId() {
+
+        while (true) {
+            clearConsole();
+            System.out.println("""
+                               \t   _____                     _        ____          _           
+                                \t / ____|                   | |      / __ \\        | |          
+                                \t| (___   ___  __ _ _ __ ___| |__   | |  | |_ __ __| | ___ _ __ 
+                                \t \\___ \\ / _ \\/ _` | '__/ __| '_ \\  | |  | | '__/ _` |/ _ \\ '__|
+                                \t ____) |  __/ (_| | | | (__| | | | | |__| | | | (_| |  __/ |   
+                               \t|_____/ \\___|\\__,_|_|  \\___|_| |_|  \\____/|_|  \\__,_|\\___|_|   """);
+
+            System.out.println(
+                    "\t_____________________________________________________________");
+            System.out.println("");
+            System.out.print("\tEnter Order Id : ");
+            String id = sc.next();
+            int index = search(orderId, id);
+            if (index == -1) {
+
+                System.out.println("");
+                System.out.println("\t\tInvalid Input...");
+                System.out.println("");
+                System.out.print("\tDo you want to search for another order?(y/n) : ");
+                char op = sc.next().charAt(0);
+
+                if (op == 'y' || op == 'Y') {
+
+                    continue;
+                } else if (op == 'n' || op == 'N') {
+
+                    home();
+
+                }
+
+            } else {
+
+                System.out.println("");
+                System.out.println("\tPhone No\t:" + contactId[index]);
+                System.out.println("\tsize\t:" + tshirtSize[index]);
+                System.out.println("\tQTY\t:" + quantity[index]);
+                System.out.println("\tStatus\t:" + st[status[index]]);
+
+                System.out.println("");
+                System.out.print("\tDo you want to search for another order?(y/n) : ");
+                char op = sc.next().charAt(0);
+
+                if (op == 'y' || op == 'Y') {
+
+                    continue;
+                } else if (op == 'n' || op == 'N') {
+
+                    home();
+
+                }
+
+            }
+        }
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static String[] extendArrayString(String[] ar) {
+
+        String tempAr[] = new String[ar.length + 1];
+
+        for (int i = 0; i < ar.length; i++) {
+
+            tempAr[i] = ar[i];
+
+        }
+
+        ar = tempAr;
+
+        return ar;
+
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static String[] removeDuplicates(String ar1[], String ar2[]) {
+
+        L1:
+        for (int i = 0; i < ar1.length; i++) {
+            for (int j = 0; j < ar2.length; j++) {
+
+                if (ar1[i].equals(ar2[j])) {
+
+                    continue L1;
+                }
+
+            }
+
+            ar2 = extendArrayString(ar2);
+            ar2[ar2.length - 1] = ar1[i];
+
+        }
+        return ar2;
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static void printReportTable(String ar1[], int ar2[], float ar3[]) {
+
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+        System.out.printf(
+                "\t\t|%-15s|%-15s|%-15s|%n", "  Customer ID", "   All QTY", "  Total Amount");
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+        System.out.printf(
+                "\t\t|%-15s|%-15s|%-15s|%n", "", "", "");
+
+        for (int i = 0; i < ar1.length; i++) {
+
+            System.out.printf("\t\t|%-15s|%-15d|%-15.2f|%n", ar1[i], ar2[i], ar3[i]);
+        }
+
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+    }
+
+    public static void accessMainwith0() {
+        while (true) {
+            System.out.println("");
+            System.out.print("\tTo access the Main Menu please enter 0 : ");
+            char op = sc.next().charAt(0);
+
+            if (op != '0') {
+                continue;
+            }
+            home();
+        }
+    }
+//--------------------------------------------------------------------------------------------------
+
+    public static void bestinCustomers() {
+        clearConsole();
+        System.out.println("""
+                                \t ____            _     _____          _____          _                            
+                               \t |  _ \\          | |   |_   _|        / ____|        | |                           
+                               \t | |_) | ___  ___| |_    | |  _ __   | |    _   _ ___| |_ ___  _ __ ___   ___ _ __ 
+                               \t |  _ < / _ \\/ __| __|   | | | '_ \\  | |   | | | / __| __/ _ \\| '_ ` _ \\ / _ \\ '__|
+                               \t | |_) |  __/\\__ \\ |_   _| |_| | | | | |___| |_| \\__ \\ || (_) | | | | | |  __/ |   
+                               \t |____/ \\___||___/\\__| |_____|_| |_|  \\_____\\__,_|___/\\__\\___/|_| |_| |_|\\___|_|   """);
+
+        System.out.println("\t________________________________________________________________________________\n");
+        System.out.println("");
+
+        if (contactId.length > 0) {
+
+            String[] contacts = new String[0];
+
+            contacts = removeDuplicates(contactId, contacts);
+
+            float[] tempAmt = new float[contacts.length];
+            int[] tempQty = new int[contacts.length];
+
+            for (int i = 0; i < contactId.length; i++) {
+                for (int j = 0; j < contacts.length; j++) {
+
+                    if (contactId[i].equals(contacts[j])) {
+
+                        tempAmt[j] += amt[i];
+                        tempQty[j] += quantity[i];
+                    }
+                }
+            }
+            for (int i = 0; i < contacts.length - 1; i++) {
+                for (int j = i + 1; j < contacts.length; j++) {
+
+                    if (tempAmt[i] < tempAmt[j]) {
+                        String temp = contacts[i];
+                        contacts[i] = contacts[j];
+                        contacts[j] = temp;
+
+                        //----------------------------
+                        int qtemp = tempQty[i];
+                        tempQty[i] = tempQty[j];
+                        tempQty[j] = qtemp;
+
+                        //----------------------------
+                        float atemp = tempAmt[i];
+                        tempAmt[i] = tempAmt[j];
+                        tempAmt[j] = atemp;
+                    }
+                }
+            }
+            printReportTable(contacts, tempQty, tempAmt);
+            accessMainwith0();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void viewCustomers() {
+        clearConsole();
+        System.out.println("""
+                               \t  __      ___                  _____          _                                
+                               \t \\ \\    / (_)                / ____|        | |                               
+                               \t  \\ \\  / / _  _____      __ | |    _   _ ___| |_ ___  _ __ ___   ___ _ __ ___ 
+                               \t   \\ \\/ / | |/ _ \\ \\ /\\ / / | |   | | | / __| __/ _ \\| '_ ` _ \\ / _ \\ '__/ __|
+                               \t    \\  /  | |  __/\\ V  V /  | |___| |_| \\__ \\ || (_) | | | | | |  __/ |  \\__ \\
+                               \t     \\/   |_|\\___| \\_/\\_/    \\_____\\__,_|___/\\__\\___/|_| |_| |_|\\___|_|  |___/""");
+        System.out.println("\t________________________________________________________________________________");
+        System.out.println("");
+        if (contactId.length > 0) {
+
+            String[] contacts = new String[0];
+
+            contacts = removeDuplicates(contactId, contacts);
+
+            float[] tempAmt = new float[contacts.length];
+            int[] tempQty = new int[contacts.length];
+
+            for (int i = 0; i < contactId.length; i++) {
+                for (int j = 0; j < contacts.length; j++) {
+
+                    if (contactId[i].equals(contacts[j])) {
+
+                        tempAmt[j] += amt[i];
+                        tempQty[j] += quantity[i];
+                    }
+                }
+            }
+            printReportTable(contacts, tempQty, tempAmt);
+            accessMainwith0();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void allCustomerReports() {
+        clearConsole();
+        System.out.println("""
+                                \t           _ _    _____          _                              _____                       _       
+                               \t     /\\   | | |  / ____|        | |                            |  __ \\                     | |      
+                               \t    /  \\  | | | | |    _   _ ___| |_ ___  _ __ ___   ___ _ __  | |__) |___ _ __   ___  _ __| |_ ___ 
+                               \t   / /\\ \\ | | | | |   | | | / __| __/ _ \\| '_ ` _ \\ / _ \\ '__| |  _  // _ \\ '_ \\ / _ \\| '__| __/ __|
+                               \t  / ____ \\| | | | |___| |_| \\__ \\ || (_) | | | | | |  __/ |    | | \\ \\  __/ |_) | (_) | |  | |_\\__ \\
+                               \t /_/    \\_\\_|_|  \\_____\\__,_|___/\\__\\___/|_| |_| |_|\\___|_|    |_|  \\_\\___| .__/ \\___/|_|   \\__|___/
+                                \t                                                                         | |                       
+                                  \t                                                                         |_|                       """);
+
+        System.out.println("\t___________________________________________________________________________________________________");
+        System.out.println("");
+        if (contactId.length > 0) {
+            String[] contacts = new String[0];
+
+            contacts = removeDuplicates(contactId, contacts);
+            System.out.println("\t+---------------+-------+-------+-------+-------+-------+-------+---------------+");
+            System.out.printf("\t|%-15s|%-7s|%-7s|%-7s|%-7s|%-7s|%-7s|%-15s|%n", " Phone Number", "   XS", "   S", "   M", "   L", "   XL", "   XXL", "  Total Amount");
+            System.out.println("\t+---------------+-------+-------+-------+-------+-------+-------+---------------+");
+
+            for (int i = 0; i < contacts.length; i++) {
+
+                int[] qty2 = new int[6];
+                float[] amt2 = new float[6];
+
+                for (int j = 0; j < contactId.length; j++) {
+
+                    if (contacts[i].equals(contactId[j])) {
+
+                        switch (tshirtSize[j]) {
+
+                            case "XS":
+                                qty2[0] += quantity[i];
+                                amt2[0] += amt[i];
+                                break;
+                            case "S":
+                                qty2[1] += quantity[i];
+                                amt2[1] += amt[i];
+                                break;
+                            case "M":
+                                qty2[2] += quantity[i];
+                                amt2[2] += amt[i];
+                                break;
+                            case "L":
+                                qty2[3] += quantity[i];
+                                amt2[3] += amt[i];
+                                break;
+                            case "XL":
+                                qty2[4] += quantity[i];
+                                amt2[4] += amt[i];
+                                break;
+                            case "XXL":
+                                qty2[5] += quantity[i];
+                                amt2[5] += amt[i];
+                        }
+                    }
+
+                }
+                float tot = 0;
+                for (int k = 0; k < 6; k++) {
+
+                    tot += amt2[k];
+
+                }
+
+                for (int m = 0; m < contacts.length; m++) {
+                    System.out.printf("\t|%-15s|%-7d|%-7d|%-7d|%-7d|%-7d|%-7d|%-15.2f|%n", contacts[i], qty2[0], qty2[1], qty2[2], qty2[3], qty2[4], qty2[5], tot);
+
+                }
+            }
+            System.out.println("\t+---------------+-------+-------+-------+-------+-------+-------+---------------+");
+
+            accessMainwith0();
+        }
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static void customerReports() {
+        clearConsole();
+        System.out.println("""
+                               \t   _____          _                              _____                       _   
+                               \t  / ____|        | |                            |  __ \\                     | |  
+                               \t | |    _   _ ___| |_ ___  _ __ ___   ___ _ __  | |__) |___ _ __   ___  _ __| |_ 
+                               \t | |   | | | / __| __/ _ \\| '_ ` _ \\ / _ \\ '__| |  _  // _ \\ '_ \\ / _ \\| '__| __|
+                               \t | |___| |_| \\__ \\ || (_) | | | | | |  __/ |    | | \\ \\  __/ |_) | (_) | |  | |_ 
+                               \t  \\_____\\__,_|___/\\__\\___/|_| |_| |_|\\___|_|    |_|  \\_\\___| .__/ \\___/|_|   \\__|
+                               \t                                                            | |                   
+                               \t                                                            |_|                   """);
+        System.out.println("\t________________________________________________________________________________\n");
+        System.out.println("");
+        System.out.println("\tBest in Customers    [1]");
+        System.out.println("");
+        System.out.println("\tView Customers       [2]");
+        System.out.println("");
+        System.out.println("\tAll Customer Reports [3]");
+        System.out.println("");
+        System.out.print("Enter option : ");
+
+        char op = sc.next().charAt(0);
+
+        switch (op) {
+
+            case '1':
+
+                bestinCustomers();
+
+            case '2':
+
+                viewCustomers();
+
+            case '3':
+
+                allCustomerReports();
+
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void sortedByQty() {
+        clearConsole();
+        System.out.println("""
+                               \t   _____            _           _   ____           ____ _________     __
+                               \t  / ____|          | |         | | |  _ \\         / __ \\__   __\\ \\   / /
+                               \t | (___   ___  _ __| |_ ___  __| | | |_) |_   _  | |  | | | |   \\ \\_/ / 
+                               \t  \\___ \\ / _ \\| '__| __/ _ \\/ _` | |  _ <| | | | | |  | | | |    \\   /  
+                               \t  ____) | (_) | |  | ||  __/ (_| | | |_) | |_| | | |__| | | |     | |   
+                               \t |_____/ \\___/|_|   \\__\\___|\\__,_| |____/ \\__, |  \\___\\_\\ |_|     |_|   
+                               \t                                           __/ |                        
+                               \t                                          |___/                         """);
+        System.out.println("\t__________________________________________________________________");
+        System.out.println("");
+        int[] tempqty = new int[6];
+        float[] tempamt = new float[6];
+        String[] tempsize = {"XS", "S", "M", "L", "XL", "XXL"};
+        for (int i = 0; i < tshirtSize.length; i++) {
+
+            switch (tshirtSize[i]) {
+                case "XS":
+                    tempqty[0] += quantity[i];
+                    tempamt[0] += amt[i];
+                    break;
+                case "S":
+                    tempqty[1] += quantity[i];
+                    tempamt[1] += amt[i];
+                    break;
+                case "M":
+                    tempqty[2] += quantity[i];
+                    tempamt[2] += amt[i];
+                    break;
+                case "L":
+                    tempqty[3] += quantity[i];
+                    tempamt[3] += amt[i];
+                    break;
+                case "XL":
+                    tempqty[4] += quantity[i];
+                    tempamt[4] += amt[i];
+                    break;
+                case "XXL":
+                    tempqty[5] += quantity[i];
+                    tempamt[5] += amt[i];
+
+            }
+
+        }
+        for (int i = 0; i < tempqty.length - 1; i++) {
+            for (int j = i + 1; j < tempqty.length; j++) {
+
+                if (tempqty[i] < tempqty[j]) {
+
+                    int qtemp = tempqty[i];
+                    tempqty[i] = tempqty[j];
+                    tempqty[j] = qtemp;
+
+                    //----------------------------
+                    float atemp = tempamt[i];
+                    tempamt[i] = tempamt[j];
+                    tempamt[j] = atemp;
+                    //----------------------------
+                    String stemp = tempsize[i];
+                    tempsize[i] = tempsize[j];
+                    tempsize[j] = stemp;
+
+                    //----------------------------
+                }
+            }
+        }
+
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+        System.out.printf(
+                "\t\t|%-15s|%-15s|%-15s|%n", "  Size", "    QTY", "  Total Amount");
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+        System.out.printf(
+                "\t\t|%-15s|%-15s|%-15s|%n", "", "", "");
+
+        for (int i = 0; i < 6; i++) {
+
+            System.out.printf("\t\t|%-15s|%-15d|%-15.2f|%n", tempsize[i], tempqty[i], tempamt[i]);
+        }
+
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+
+        accessMainwith0();
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void sortedByAmt() {
+        clearConsole();
+        System.out.println("""
+                                \t   _____            _           _   ____                                               _   
+                               \t  / ____|          | |         | | |  _ \\            /\\                               | |  
+                               \t | (___   ___  _ __| |_ ___  __| | | |_) |_   _     /  \\   _ __ ___   ___  _   _ _ __ | |_ 
+                               \t  \\___ \\ / _ \\| '__| __/ _ \\/ _` | |  _ <| | | |   / /\\ \\ | '_ ` _ \\ / _ \\| | | | '_ \\| __|
+                               \t  ____) | (_) | |  | ||  __/ (_| | | |_) | |_| |  / ____ \\| | | | | | (_) | |_| | | | | |_ 
+                               \t |_____/ \\___/|_|   \\__\\___|\\__,_| |____/ \\__, | /_/    \\_\\_| |_| |_|\\___/ \\__,_|_| |_|\\__|
+                               \t                                           __/ |                                           
+                               \t                                          |___/                                            """);
+        System.out.println("\t_____________________________________________________________________________________");
+        System.out.println("");
+        int[] tempqty = new int[6];
+        float[] tempamt = new float[6];
+        String[] tempsize = {"XS", "S", "M", "L", "XL", "XXL"};
+        for (int i = 0; i < tshirtSize.length; i++) {
+
+            switch (tshirtSize[i]) {
+                case "XS":
+                    tempqty[0] += quantity[i];
+                    tempamt[0] += amt[i];
+                    break;
+                case "S":
+                    tempqty[1] += quantity[i];
+                    tempamt[1] += amt[i];
+                    break;
+                case "M":
+                    tempqty[2] += quantity[i];
+                    tempamt[2] += amt[i];
+                    break;
+                case "L":
+                    tempqty[3] += quantity[i];
+                    tempamt[3] += amt[i];
+                    break;
+                case "XL":
+                    tempqty[4] += quantity[i];
+                    tempamt[4] += amt[i];
+                    break;
+                case "XXL":
+                    tempqty[5] += quantity[i];
+                    tempamt[5] += amt[i];
+
+            }
+
+        }
+        for (int i = 0; i < tempqty.length - 1; i++) {
+            for (int j = i + 1; j < tempqty.length; j++) {
+
+                if (tempamt[i] < tempamt[j]) {
+
+                    int qtemp = tempqty[i];
+                    tempqty[i] = tempqty[j];
+                    tempqty[j] = qtemp;
+
+                    //----------------------------
+                    float atemp = tempamt[i];
+                    tempamt[i] = tempamt[j];
+                    tempamt[j] = atemp;
+                    //----------------------------
+                    String stemp = tempsize[i];
+                    tempsize[i] = tempsize[j];
+                    tempsize[j] = stemp;
+
+                    //----------------------------
+                }
+            }
+        }
+
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+        System.out.printf(
+                "\t\t|%-15s|%-15s|%-15s|%n", "  Size", "    QTY", "  Total Amount");
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+        System.out.printf(
+                "\t\t|%-15s|%-15s|%-15s|%n", "", "", "");
+
+        for (int i = 0; i < 6; i++) {
+
+            System.out.printf("\t\t|%-15s|%-15d|%-15.2f|%n", tempsize[i], tempqty[i], tempamt[i]);
+        }
+
+        System.out.println(
+                "\t\t+---------------+---------------+---------------+");
+
+        accessMainwith0();
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void itemReports() {
+        clearConsole();
+        System.out.println("""
+                               \t _____ _                   _____                       _       
+                                \t|_   _| |                 |  __ \\                     | |      
+                                 \t  | | | |_ ___ _ __ ___   | |__) |___ _ __   ___  _ __| |_ ___ 
+                                 \t  | | | __/ _ \\ '_ ` _ \\  |  _  // _ \\ '_ \\ / _ \\| '__| __/ __|
+                                \t _| |_| ||  __/ | | | | | | | \\ \\  __/ |_) | (_) | |  | |_\\__ \\
+                                \t|_____|\\__\\___|_| |_| |_| |_|  \\_\\___| .__/ \\___/|_|   \\__|___/
+                                \t                                     | |                       
+                                 \t                                    |_|      """);
+        System.out.println("\t______________________________________________________________\n");
+        System.out.println("");
+        System.out.println("\t[1]Best selling categories sorted by quantity ");
+        System.out.println("");
+        System.out.println("\t[2]Best selling categories sorted by amount ");
+        System.out.println("");
+        System.out.print("Enter option : ");
+        char op = sc.next().charAt(0);
+
+        switch (op) {
+            case '1':
+                sortedByQty();
+
+            case '2':
+                sortedByAmt();
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void viewOrders() {
+        clearConsole();
+        System.out.println("""
+                               \t\t __      ___                  ____          _               
+                               \t\t \\ \\    / (_)                / __ \\        | |              
+                               \t\t  \\ \\  / / _  _____      __ | |  | |_ __ __| | ___ _ __ ___ 
+                               \t\t   \\ \\/ / | |/ _ \\ \\ /\\ / / | |  | | '__/ _` |/ _ \\ '__/ __|
+                               \t\t    \\  /  | |  __/\\ V  V /  | |__| | | | (_| |  __/ |  \\__ \\
+                               \t\t     \\/   |_|\\___| \\_/\\_/    \\____/|_|  \\__,_|\\___|_|  |___/""");
+        System.out.println("\t\t______________________________________________________________\n\n");
+        System.out.println("");
+        System.out.println("+---------------+---------------+---------------+---------------+---------------+---------------+");
+        System.out.printf("|%-15s|%-15s|%-15s|%-15s|%-15s|%-15s|%n", "Order ID", "  Customer ID", "    Size", "   Quantity", "    Amount", "    Status");
+        System.out.println("+---------------+---------------+---------------+---------------+---------------+---------------+");
+        for (int i = 0; i < orderId.length; i++) {
+            System.out.printf("|%-15s|%-15s|%-15s|%-15d|%-15.2f|%-15s|%n", orderId[i], contactId[i], tshirtSize[i], quantity[i], amt[i], st[status[i]]);
+
+        }
+        System.out.println("+---------------+---------------+---------------+---------------+---------------+---------------+");
+        accessMainwith0();
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void viewOrdersByAmt() {
+        clearConsole();
+        System.out.println("""
+                               \t   ____          _                 ____                                               _   
+                               \t  / __ \\        | |               |  _ \\            /\\                               | |  
+                               \t | |  | |_ __ __| | ___ _ __ ___  | |_) |_   _     /  \\   _ __ ___   ___  _   _ _ __ | |_ 
+                               \t | |  | | '__/ _` |/ _ \\ '__/ __| |  _ <| | | |   / /\\ \\ | '_ ` _ \\ / _ \\| | | | '_ \\| __|
+                               \t | |__| | | | (_| |  __/ |  \\__ \\ | |_) | |_| |  / ____ \\| | | | | | (_) | |_| | | | | |_ 
+                               \t  \\____/|_|  \\__,_|\\___|_|  |___/ |____/ \\__, | /_/    \\_\\_| |_| |_|\\___/ \\__,_|_| |_|\\__|
+                               \t                                          __/ |                                           
+                               \t                                         |___/                                            """);
+        System.out.println("\t______________________________________________________________________________________\n");
+        System.out.println("");
+        for (int i = 0; i < orderId.length - 1; i++) {
+            for (int j = i + 1; j < orderId.length; j++) {
+
+                if (amt[i] < amt[j]) {
+                    String temp = contactId[i];
+                    contactId[i] = contactId[j];
+                    contactId[j] = temp;
+
+                    //----------------------------
+                    String stemp = tshirtSize[i];
+                    tshirtSize[i] = tshirtSize[j];
+                    tshirtSize[j] = stemp;
+
+                    //----------------------------
+                    int qtemp = quantity[i];
+                    quantity[i] = quantity[j];
+                    quantity[j] = qtemp;
+
+                    //----------------------------
+                    int sttemp = status[i];
+                    status[i] = status[j];
+                    status[j] = sttemp;
+
+                    //----------------------------
+                    float atemp = amt[i];
+                    amt[i] = amt[j];
+                    amt[j] = atemp;
+                }
+            }
+        }
+        System.out.println("+---------------+---------------+---------------+---------------+---------------+---------------+");
+        System.out.printf("|%-15s|%-15s|%-15s|%-15s|%-15s|%-15s|%n", "Order ID", "  Customer ID", "    Size", "   Quantity", "    Amount", "    Status");
+        System.out.println("+---------------+---------------+---------------+---------------+---------------+---------------+");
+        for (int i = 0; i < orderId.length; i++) {
+            System.out.printf("|%-15s|%-15s|%-15s|%-15d|%-15.2f|%-15s|%n", orderId[i], contactId[i], tshirtSize[i], quantity[i], amt[i], st[status[i]]);
+
+        }
+        System.out.println("+---------------+---------------+---------------+---------------+---------------+---------------+");
+        accessMainwith0();
+
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static void orderReports() {
+        clearConsole();
+        System.out.println("""
+                               \t   ____          _             _____                       _   
+                               \t  / __ \\        | |           |  __ \\                     | |  
+                               \t | |  | |_ __ __| | ___ _ __  | |__) |___ _ __   ___  _ __| |_ 
+                               \t | |  | | '__/ _` |/ _ \\ '__| |  _  // _ \\ '_ \\ / _ \\| '__| __|
+                               \t | |__| | | | (_| |  __/ |    | | \\ \\  __/ |_) | (_) | |  | |_ 
+                               \t  \\____/|_|  \\__,_|\\___|_|    |_|  \\_\\___| .__/ \\___/|_|   \\__|
+                               \t                                         | |                   
+                               \t                                         |_|                   """);
+        System.out.println("\t_________________________________________________________________________\n");
+        System.out.println("");
+        System.out.println("\t[1] All Orders");
+        System.out.println("");
+        System.out.println("\t[2] Orders By Amount");
+        System.out.println("");
+        System.out.print("Enter option : ");
+        char op = sc.next().charAt(0);
+        switch (op) {
+            case '1':
+                viewOrders();
+            case '2':
+                viewOrdersByAmt();
+        }
+
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static void viewReports() {
+        clearConsole();
+        System.out.println("""
+                               \t  _____                       _   
+                               \t |  __ \\                     | |  
+                               \t | |__) |___ _ __   ___  _ __| |_ 
+                               \t |  _  // _ \\ '_ \\ / _ \\| '__| __|
+                               \t | | \\ \\  __/ |_) | (_) | |  | |_ 
+                               \t |_|  \\_\\___| .__/ \\___/|_|   \\__|
+                               \t            | |                   
+                               \t            |_|                """);
+        System.out.println("\t_________________________________\n");
+        System.out.println("");
+
+        System.out.println("\t[1]Customer Reports ");
+        System.out.println("");
+        System.out.println("\t[2]Item Reports    ");
+        System.out.println("");
+        System.out.println("\t[3]Order Reports   ");
+        System.out.println("");
+        System.out.print("Enter option : ");
+        char option = sc.next().charAt(0);
+
+        switch (option) {
+            case '1':
+
+                customerReports();
+
+            case '2':
+
+                itemReports();
+            case '3':
+
+                orderReports();
+        }
+
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void changeStatus() {
+        L2:
+        while (true) {
+            clearConsole();
+            System.out.println("""
+                               \t  ____          _              _____ _        _             
+                                \t / __ \\        | |            / ____| |      | |            
+                                \t| |  | |_ __ __| | ___ _ __  | (___ | |_ __ _| |_ _   _ ___ 
+                                \t| |  | | '__/ _` |/ _ \\ '__|  \\___ \\| __/ _` | __| | | / __|
+                                \t| |__| | | | (_| |  __/ |     ____) | || (_| | |_| |_| \\__ \\
+                                \t \\____/|_|  \\__,_|\\___|_|    |_____/ \\__\\__,_|\\__|\\__,_|___/""");
+
+            System.out.println(
+                    "\t________________________________________________________");
+            System.out.println("");
+
+            System.out.print("\tEnter Order Id   : ");
+            String id = sc.next();
+            int index = search(orderId, id);
+            if (index == -1) {
+
+                System.out.println("");
+                System.out.println("\t\tInvalid Input...");
+                System.out.print("\tDo you want to change another order status?(y/n) : ");
+                char op = sc.next().charAt(0);
+
+                if (op == 'y' || op == 'Y') {
+                    continue;
+                } else if (op == 'n' || op == 'N') {
+                    home();
+                }
+            }
+            System.out.println("\tPhone Numer\t: " + contactId[index]);
+            System.out.println("\tSize\t\t: " + tshirtSize[index]);
+            System.out.println("\tQTY\t\t: " + quantity[index]);
+            System.out.println("\tAmount\t\t: " + amt[index]);
+            System.out.println("\tStatus\t\t: " + st[status[index]]);
+            System.out.println("");
+            System.out.print("\tDo you want to change this order status?(y/n) : ");
+            char op4 = sc.next().charAt(0);
+
+            switch (op4) {
+                case 'y','Y':
+
+                    if (status[index] == 0) {
+                        System.out.println("");
+                        System.out.println("\t[1] Order Delivering");
+                        System.out.println("\t[2] Order Delivered");
+                        System.out.println("");
+                        System.out.print("\tEnter option : ");
+                        char option = sc.next().charAt(0);
+                        switch (option) {
+                            case '1':
+                                System.out.println("");
+                                System.out.println("\tstatus updated!");
+                                status[index] = 1;
+                                break;
+
+                            case '2':
+                                System.out.println("\tstatus updated!");
+                                status[index] = 2;
+                        }
+                    } else if (status[index] == 1) {
+                        System.out.println("");
+                        System.out.println("\t[2] Order Delivered");
+                        L3:
+                        while (status[index] == 1) {
+                            System.out.println("");
+                            System.out.print("\tEnter option : ");
+                            char op2 = sc.next().charAt(0);
+                            if (op2 != '2') {
+                                System.out.println("");
+                                System.out.println("\tInvalid Input...");
+                                System.out.println("");
+                                continue L3;
+                            } else {
+                                System.out.println("");
+                                System.out.println("\tstatus updated!");
+                                status[index] = 2;
+
+                            }
+
+                        }
+                    } else if (status[index] == 2) {
+                        System.out.println("");
+                        System.out.println("\tOrder status cannot be changed, order already delivered!");
+                    }
+
+                case 'n','N':
+                    System.out.println("");
+                    System.out.print("Do you want to change another order status?(y/n) : ");
+                    char op3 = sc.next().charAt(0);
+                    if (op3 == 'y' || op3 == 'Y') {
+                        continue L2;
+
+                    } else {
+
+                        home();
+                    }
+            }
+        }
+    }
+    //--------------------------------------------------------------------------------------------------
+
+    public static int[] deleteInt(int[] ar, int index) {
+        int temp[] = new int[ar.length - 1];
+        for (int i = 0; i < temp.length; i++) {
+            if (i < index) {
+                temp[i] = ar[i];
+            } else {
+                temp[i] = ar[i + 1];
+            }
+
+        }
+        
+        return temp;
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static String[] deleteString(String[] ar, int index) {
+        String temp[] = new String[ar.length - 1];
+        for (int i = 0; i < temp.length; i++) {
+            if (i < index) {
+                temp[i] = ar[i];
+            } else {
+                temp[i] = ar[i + 1];
+            }
+
+        }
+        
+        return temp;
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static float[] deleteFloat(float[] ar, int index) {
+        float temp[] = new float[ar.length - 1];
+        for (int i = 0; i < temp.length; i++) {
+            if (i < index) {
+                temp[i] = ar[i];
+            } else {
+                temp[i] = ar[i + 1];
+            }
+
+        }
+        
+        return temp;
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void deleteOrder() {
+
+        while (true) {
+            clearConsole();
+            System.out.println("""
+                               \t  _____       _      _          ____          _           
+                               \t |  __ \\     | |    | |        / __ \\        | |          
+                               \t | |  | | ___| | ___| |_ ___  | |  | |_ __ __| | ___ _ __ 
+                               \t | |  | |/ _ \\ |/ _ \\ __/ _ \\ | |  | | '__/ _` |/ _ \\ '__|
+                               \t | |__| |  __/ |  __/ ||  __/ | |__| | | | (_| |  __/ |   
+                               \t |_____/ \\___|_|\\___|\\__\\___|  \\____/|_|  \\__,_|\\___|_|   """);
+            System.out.println("\n\t_____________________________________________________\n");
+            System.out.print("\tEnter Order Id   : ");
+            String id = sc.next();
+            int index = search(orderId, id);
+            if (index == -1) {
+
+                System.out.println("");
+                System.out.println("\t\tInvalid Input...");
+                System.out.print("\tDo you want to delete another order?(y/n) : ");
+                char op = sc.next().charAt(0);
+
+                if (op == 'y' || op == 'Y') {
+                    continue;
+                } else if (op == 'n' || op == 'N') {
+                    home();
+                }
+            }
+            System.out.println("\tPhone Numer\t: " + contactId[index]);
+            System.out.println("\tSize\t\t: " + tshirtSize[index]);
+            System.out.println("\tQTY\t\t: " + quantity[index]);
+            System.out.println("\tAmount\t\t: " + amt[index]);
+            System.out.println("\tStatus\t\t: " + st[status[index]]);
+
+            System.out.println("");
+            System.out.print("\tDo you want to delete this order?(y/n) : ");
+            System.out.println("");
+            char op4 = sc.next().charAt(0);
+
+            switch (op4) {
+                case 'y','Y':
+                    if (status[index] == 1 || status[index] == 2) {
+                        System.out.println("\t\tYou cannot delete this order as it is done being processed");
+                        System.out.println("");
+
+                    } else {
+                        Finalcoursework.contactId = deleteString(contactId, index);
+                        Finalcoursework.tshirtSize = deleteString(tshirtSize, index);
+                        Finalcoursework.quantity = deleteInt(quantity, index);
+                        Finalcoursework.amt = deleteFloat(amt, index);
+                        Finalcoursework.status = deleteInt(status, index);
+                        System.out.println("\t\tOrder Deleted!...");
+                        System.out.println("");
+                    }
+                    System.out.print("\tDo you want to delete another order?(y/n) : ");
+                    char op = sc.next().charAt(0);
+                    if (op == 'y' || op == 'Y') {
+                        continue;
+                    } else {
+                        home();
+                    }
+
+            }
+
+        }
+    }
+
+    //--------------------------------------------------------------------------------------------------
+    public static void home() {
+        clearConsole();
+        System.out.println("/$$$$$$$$                 /$$       /$$                          /$$$$$$  /$$               ");
+        System.out.println("| $$_____/                | $$      | __/                        /$$__  $$| $$");
+        System.out.println("| $$    /$$$$$$   /$$$$$$$| $$$$$$$  /$$  /$$$$$$  /$$$$$$$     | $$  \\__/| $$$$$$$   /$$$$$$   /$$$$$$");
+        System.out.println("| $$$$$|_ _ _ $$ /$$_____/| $$__  $$| $$ /$$__  $$| $$__  $$    |  $$$$$$ | $$__  $$ /$$__  $$ /$$__  $$");
+        System.out.println("| $$__/ /$$$$$$$|  $$$$$$ | $$  \\ $$| $$| $$  \\ $$| $$  \\ $$     \\____  $$| $$  \\ $$| $$  \\ $$| $$  \\ $$");
+        System.out.println("| $$   /$$__  $$ \\_____ $$| $$  | $$| $$| $$  | $$| $$  | $$     /$$  | $$| $$  | $$| $$   |$$| $$  | $$");
+        System.out.println("| $$  |  $$$$$$$ /$$$$$$$/| $$  | $$| $$|  $$$$$$/| $$  | $$    |  $$$$$$/| $$  | $$|  $$$$$$/| $$$$$$$/");
+        System.out.println("| __/  \\________/|______/ |__/  |___|___|\\______/ |___/ |__/     \\______/ |__/  |___/\\______/ | $$____/");
+        System.out.println("                                                                                              | $$");
+        System.out.println("                                                                                              | $$");
+        System.out.println("                                                                                              |__/");
+        System.out.println("");
+        System.out.println("---------------------------------------------------------------------------------------------------------  ");
+        System.out.println("");
+        System.out.printf("\t%-30s%s%n%n", "[1] Place Order", "[2] Search Customer");
+        System.out.printf("\t%-30s%s%n%n", "[3] Search Order", "[4] View Reports");
+        System.out.printf("\t%-30s%s%n%n", "[5] Change Order Status", "[6] Delete Order");
+
+        System.out.print("\tInput Option  : ");
+        char option = sc.next().charAt(0);
+
+        switch (option) {
+
+            case '1':
+
+                placeOrder();
+
+            case '2':
+
+                searchCustomer();
+
+            case '3':
+
+                searchOrderId();
+
+            case '4':
+
+                viewReports();
+
+            case '5':
+
+                changeStatus();
+
+            case '6':
+
+                deleteOrder();
+
+        }
+    }
+
+    public static void main(String[] args) {
+
+        home();
+
+    }
+
+}
